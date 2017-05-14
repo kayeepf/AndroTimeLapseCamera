@@ -1,6 +1,7 @@
 package com.kayeepf.android.androidtimelapsecamera;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -15,6 +16,7 @@ public class TestPortalActivity extends Activity {
 
     public static final String log_tag = "[TestPortalActivity]";
     LinearLayout linearLayout;
+    Button btn_launchSimpleCameraActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,17 @@ public class TestPortalActivity extends Activity {
         super.onCreate(savedInstanceState);
         linearLayout = new LinearLayout(getApplicationContext());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        btn_launchSimpleCameraActivity = new Button(getApplicationContext());
+        btn_launchSimpleCameraActivity.setText("Launch SimpleCameraActivity");
+        btn_launchSimpleCameraActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),SimpleCameraActivity.class);
+                startActivity(intent);
+            }
+        });
+        linearLayout.addView(btn_launchSimpleCameraActivity);
 
         setContentView(linearLayout);
         Log.i(log_tag, "<<<onCreate()");

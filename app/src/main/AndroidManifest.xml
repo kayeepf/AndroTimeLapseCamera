@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".TestPortalActivity"></activity>
+        <activity android:name=".SimpleCameraActivity"></activity>
     </application>
 
 </manifest>
