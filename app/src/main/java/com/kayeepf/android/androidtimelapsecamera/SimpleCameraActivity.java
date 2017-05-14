@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import java.io.IOException;
@@ -14,14 +17,22 @@ import java.io.IOException;
 /**
  * Created by huangshifeng on 2017/5/14.
  */
-public class SimpleCameraActivity extends Activity implements SurfaceHolder.Callback {
+public class SimpleCameraActivity extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback {
 
     public static final String log_tag = "[SimpleCameraActivity]";
     RelativeLayout relativeLayout;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
 
-    Camera camera = null;
+    Button btn_cameraAutoFucus;
+
+    static Camera camera = null;
+
+    static Handler handler = null;
+
+    SimpleCameraActivity getInstance(){
+        return this;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +45,29 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
 
+        btn_cameraAutoFucus = new Button(getApplicationContext());
+        btn_cameraAutoFucus.setText("AF");
+        btn_cameraAutoFucus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_cameraAutoFucus.setEnabled(false);
+                getInstance().handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        camera.autoFocus(getInstance());
+                    }
+                });
+            }
+        });
+        relativeLayout.addView(btn_cameraAutoFucus);
+
+
         setContentView(relativeLayout);
+
+        if(handler == null)
+        {
+            handler = new Handler();
+        }
         Log.i(log_tag,"<<<onCreate()");
     }
 
@@ -67,7 +100,8 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     public void surfaceCreated(SurfaceHolder holder) {
         Log.i(log_tag,">>>surfaceCreated()");
         if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            camera = camera.open();
+            if(camera == null)
+                camera = camera.open();
             Camera.Parameters cameraParam = camera.getParameters();
             camera.setParameters(cameraParam);
             camera.setDisplayOrientation(90);
@@ -100,5 +134,13 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
             camera = null;
         }
         Log.i(log_tag,"<<<surfaceDestroyed()");
+    }
+
+    @Override
+    public void onAutoFocus(boolean success, Camera camera) {
+        Log.i(log_tag,">>>onAutoFocus()");
+        Log.d(log_tag,"auto focus "+((success==true)?"success":"fail"));
+        btn_cameraAutoFucus.setEnabled(true);
+        Log.i(log_tag,"<<<onAutoFocus()");
     }
 }
