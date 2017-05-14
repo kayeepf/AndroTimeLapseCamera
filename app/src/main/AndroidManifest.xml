@@ -18,6 +18,13 @@
         </activity>
         <activity android:name=".TestPortalActivity"></activity>
         <activity android:name=".SimpleCameraActivity"></activity>
+        <activity android:name=".SimpleBatteryActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <!-- <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/> -->
+                <!-- <action android:name="android.intent.action.BATTERY_LOW"/> -->
+                <!-- <action android:name="android.intent.action.BATTERY_OKAY"/> -->
+            </intent-filter>
+        </activity>
     </application>
-
 </manifest>

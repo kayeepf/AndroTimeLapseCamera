@@ -3,7 +3,6 @@ package com.kayeepf.android.androidtimelapsecamera;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +16,7 @@ public class TestPortalActivity extends Activity {
     public static final String log_tag = "[TestPortalActivity]";
     LinearLayout linearLayout;
     Button btn_launchSimpleCameraActivity;
+    Button btn_launchSimplePowerActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,17 @@ public class TestPortalActivity extends Activity {
             }
         });
         linearLayout.addView(btn_launchSimpleCameraActivity);
+
+        btn_launchSimplePowerActivity = new Button(getApplicationContext());
+        btn_launchSimplePowerActivity.setText("Launch SimplePowerActivity");
+        btn_launchSimplePowerActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),SimpleBatteryActivity.class);
+                startActivity(intent);
+            }
+        });
+        linearLayout.addView(btn_launchSimplePowerActivity);
 
         setContentView(linearLayout);
         Log.i(log_tag, "<<<onCreate()");
