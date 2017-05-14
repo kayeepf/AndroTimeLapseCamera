@@ -10,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.io.IOException;
@@ -17,14 +18,17 @@ import java.io.IOException;
 /**
  * Created by huangshifeng on 2017/5/14.
  */
-public class SimpleCameraActivity extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback {
+public class SimpleCameraActivity extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.ShutterCallback, Camera.PictureCallback {
 
     public static final String log_tag = "[SimpleCameraActivity]";
-    RelativeLayout relativeLayout;
+    //RelativeLayout relativeLayout;
+    LinearLayout linearLayoutAll;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
 
+    LinearLayout linearLayoutUi;
     Button btn_cameraAutoFucus;
+    Button btn_shutter;
 
     static Camera camera = null;
 
@@ -34,23 +38,38 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         return this;
     }
 
+    void enableAllUi()
+    {
+        btn_cameraAutoFucus.setEnabled(true);
+        btn_shutter.setEnabled(true);
+    }
+
+    void disableAllUi()
+    {
+        btn_cameraAutoFucus.setEnabled(false);
+        btn_shutter.setEnabled(false);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(log_tag, ">>>onCreate()");
         super.onCreate(savedInstanceState);
-        relativeLayout = new RelativeLayout(getBaseContext());
+        linearLayoutAll = new LinearLayout(getApplicationContext());
+        linearLayoutAll.setOrientation(LinearLayout.VERTICAL);
         surfaceView = new SurfaceView(getBaseContext());
-        relativeLayout.addView(surfaceView);
 
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
+
+        linearLayoutUi = new LinearLayout(getApplicationContext());
+        linearLayoutUi.setOrientation(LinearLayout.HORIZONTAL);
 
         btn_cameraAutoFucus = new Button(getApplicationContext());
         btn_cameraAutoFucus.setText("AF");
         btn_cameraAutoFucus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btn_cameraAutoFucus.setEnabled(false);
+                disableAllUi();
                 getInstance().handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -59,10 +78,28 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                 });
             }
         });
-        relativeLayout.addView(btn_cameraAutoFucus);
+        linearLayoutUi.addView(btn_cameraAutoFucus);
 
+        btn_shutter = new Button(getApplicationContext());
+        btn_shutter.setText("Shutter");
+        btn_shutter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                disableAllUi();
+                getInstance().handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        camera.takePicture(getInstance(), null, getInstance());
+                    }
+                });
+            }
+        });
+        linearLayoutUi.addView(btn_shutter);
 
-        setContentView(relativeLayout);
+        linearLayoutAll.addView(linearLayoutUi);
+        linearLayoutAll.addView(surfaceView);
+
+        setContentView(linearLayoutAll);
 
         if(handler == null)
         {
@@ -139,8 +176,22 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     @Override
     public void onAutoFocus(boolean success, Camera camera) {
         Log.i(log_tag,">>>onAutoFocus()");
-        Log.d(log_tag,"auto focus "+((success==true)?"success":"fail"));
-        btn_cameraAutoFucus.setEnabled(true);
-        Log.i(log_tag,"<<<onAutoFocus()");
+        Log.d(log_tag, "auto focus " + ((success == true) ? "success":"fail"));
+        enableAllUi();
+        Log.i(log_tag, "<<<onAutoFocus()");
+    }
+
+    @Override
+    public void onPictureTaken(byte[] data, Camera camera) {
+        Log.i(log_tag,">>>onPictureTaken()");
+        enableAllUi();
+        Log.i(log_tag,"<<<onPictureTaken()");
+    }
+
+    @Override
+    public void onShutter() {
+        Log.i(log_tag, ">>>onShutter()");
+        camera.startPreview();
+        Log.i(log_tag,"<<<onShutter()");
     }
 }
