@@ -4,17 +4,19 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.RelativeLayout;
 
 /**
  * Created by huangshifeng on 2017/5/14.
  */
-public class SimpleCameraActivity extends Activity {
+public class SimpleCameraActivity extends Activity implements SurfaceHolder.Callback {
 
     public static final String log_tag = "[SimpleCameraActivity]";
     RelativeLayout relativeLayout;
     SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
 
     static boolean checkHardwareOk = false;
 
@@ -25,6 +27,11 @@ public class SimpleCameraActivity extends Activity {
         relativeLayout = new RelativeLayout(getBaseContext());
         surfaceView = new SurfaceView(getBaseContext());
         relativeLayout.addView(surfaceView);
+
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
+
+        setContentView(relativeLayout);
         Log.i(log_tag,"<<<onCreate()");
     }
 
@@ -63,4 +70,21 @@ public class SimpleCameraActivity extends Activity {
         Log.i(log_tag, "<<<onDestroy()");
     }
 
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        Log.i(log_tag,">>>surfaceCreated()");
+        Log.i(log_tag,"<<<surfaceCreated()");
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        Log.i(log_tag,">>>surfaceChanged()");
+        Log.i(log_tag,"<<<surfaceChanged()");
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        Log.i(log_tag,">>>surfaceDestroyed()");
+        Log.i(log_tag,"<<<surfaceDestroyed()");
+    }
 }
