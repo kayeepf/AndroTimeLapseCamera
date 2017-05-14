@@ -14,13 +14,12 @@ public class MainActivity extends Activity {
 
         Intent intent = new Intent(getApplicationContext(),TestPortalActivity.class);
         startActivity(intent);
-
-        this.finish();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        this.finish();
     }
 
     @Override
