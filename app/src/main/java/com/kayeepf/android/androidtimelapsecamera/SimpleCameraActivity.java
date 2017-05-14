@@ -169,14 +169,13 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                 camera = camera.open();
             Camera.Parameters cameraParam = camera.getParameters();
             camera.setParameters(cameraParam);
-            //camera.setDisplayOrientation(90);
         }
         Log.i(log_tag,"<<<surfaceCreated()");
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.i(log_tag, ">>>surfaceChanged()");
+        Log.i(log_tag,">>>surfaceChanged()");
         if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) &&
                 camera != null) {
             camera.stopPreview();

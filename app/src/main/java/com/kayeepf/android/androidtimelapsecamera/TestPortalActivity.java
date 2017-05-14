@@ -16,7 +16,8 @@ public class TestPortalActivity extends Activity {
     public static final String log_tag = "[TestPortalActivity]";
     LinearLayout linearLayout;
     Button btn_launchSimpleCameraActivity;
-    Button btn_launchSimplePowerActivity;
+    Button btn_launchSimpleBatteryActivity;
+    Button btn_launchSimplePowerWakeLockActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,22 +31,33 @@ public class TestPortalActivity extends Activity {
         btn_launchSimpleCameraActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),SimpleCameraActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SimpleCameraActivity.class);
                 startActivity(intent);
             }
         });
         linearLayout.addView(btn_launchSimpleCameraActivity);
 
-        btn_launchSimplePowerActivity = new Button(getApplicationContext());
-        btn_launchSimplePowerActivity.setText("Launch SimplePowerActivity");
-        btn_launchSimplePowerActivity.setOnClickListener(new View.OnClickListener() {
+        btn_launchSimpleBatteryActivity = new Button(getApplicationContext());
+        btn_launchSimpleBatteryActivity.setText("Launch SimplePowerActivity");
+        btn_launchSimpleBatteryActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),SimpleBatteryActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SimpleBatteryActivity.class);
                 startActivity(intent);
             }
         });
-        linearLayout.addView(btn_launchSimplePowerActivity);
+        linearLayout.addView(btn_launchSimpleBatteryActivity);
+
+        btn_launchSimplePowerWakeLockActivity = new Button(getApplicationContext());
+        btn_launchSimplePowerWakeLockActivity.setText("Launch PowerWakeLockActivity");
+        btn_launchSimplePowerWakeLockActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SimplePowerWakeLockActivity.class);
+                startActivity(intent);
+            }
+        });
+        linearLayout.addView(btn_launchSimplePowerWakeLockActivity);
 
         setContentView(linearLayout);
         Log.i(log_tag, "<<<onCreate()");
